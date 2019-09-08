@@ -21,7 +21,7 @@ public class DisplaySoundLevel : MonoBehaviour
     void OnGUI()
     {
         //todo: change this to image rather than just text
-        displayText.text = "Sound Level: " + Mathf.Round(sourceObject.currentSoundLevel);
+        displayText.text = "Sound: " + Mathf.Round(sourceObject.currentSoundLevel);
         
     }
 }

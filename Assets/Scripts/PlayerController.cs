@@ -9,15 +9,15 @@ public class PlayerController : MonoBehaviour
 
     private float currentSpeed = 0f;
 
-    private Vector3 moveDir = Vector3.zero;
-
-    private CharacterController controller;
-
     private Transform cameraTransform;
 
     private SoundEmitter soundEmitter;
 
     private Vector3 charScale;
+
+    private Rigidbody rb;
+
+    private Vector2 pcControls;
 
     [Range(1, 20)]
     public float gravity = 10f;
@@ -26,88 +26,62 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        controller = GetComponent<CharacterController>();
         soundEmitter = GetComponent<SoundEmitter>();
         //assign the main camera as the variable
         cameraTransform = Camera.main.transform;
 
         charScale = transform.localScale;
+
+        rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
+    void Update()
+    {
+        pcControls = PlayerKeyboardInput();
+    }
+
     void FixedUpdate()
     {
-        Sneaking();
-
-        Debug.Log("Current Speed of player: " + currentSpeed);
-
-        MovePlayer();
-
+        MovePlayer(pcControls, maxSpeed);
     }
 
     /// <summary>
     /// the main player movement method. It uses the camera direction for the player movement
+    /// the controlVector value must be clamped to 1
     /// </summary>
-    void MovePlayer()
+    public void MovePlayer(Vector2 controlVector, float moveSpeed)
     {
-        //todo: change it when implementing joystick
-        if (controller.isGrounded)
-        {
-            //get camera axis of the transform in world spaces
-            Vector3 forwardCam = cameraTransform.forward;
-            Vector3 rightCam = cameraTransform.right;
+        //get camera axis of the transform in world spaces
+        Vector3 forwardCam = cameraTransform.forward;
+        Vector3 rightCam = cameraTransform.right;
 
-            //get player input from keyboard as vector 2
-            Vector2 playerInput = PlayerKeyboardInput();
+        //normalize the cam value
+        forwardCam.y = 0;
+        rightCam.y = 0;
+        forwardCam = forwardCam.normalized;
+        rightCam = rightCam.normalized;
 
-            //clamp the input value to be -1 ~ 1
-            playerInput = Vector2.ClampMagnitude(playerInput, 1);
-
-            //normalize the cam value
-            forwardCam.y = 0;
-            rightCam.y = 0;
-            forwardCam = forwardCam.normalized;
-            rightCam = rightCam.normalized;
-
-            //calculate the player's movement direction
-            moveDir = (forwardCam * playerInput.y + rightCam * playerInput.x) * Time.deltaTime;
-            //add movement speed
-            moveDir *= currentSpeed;
-
-        }
-
-        if ((Input.GetAxis("Horizontal") != 0f || Input.GetAxis("Vertical") != 0f))
-        {
-            //todo: make the value vary depending on the floor type
-            soundEmitter.currentSoundLevel = currentSpeed;
-        }
-
-        //simulated gravity by decreasing the y value by every ms
-        moveDir.y -= gravity * Time.deltaTime;
-
-        //finally change the controller component
-        controller.Move(moveDir);
-
+        rb.MovePosition(transform.position + ((forwardCam * controlVector.y + rightCam * controlVector.x) * moveSpeed * Time.deltaTime));
     }
 
     private Vector2 PlayerKeyboardInput()
     {
-        
-        return new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        return Vector2.ClampMagnitude(new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")), 1);
     }
 
     private void Sneaking()
     {
+        //todo: this currently has keyboard controls in mind, must change to joystick later
         if (Input.GetButton("Sneak"))
         {
             currentSpeed = maxSpeed / 2;
-            //shrink the y value by half
+            //shrink the y value of the character mesh by half
             transform.localScale = charScale - new Vector3(0, charScale.y / 2f, 0);
         }
         else
         {
             currentSpeed = maxSpeed;
-            //make the size back to normal
+            //make the character mesh size back to normal
             transform.localScale = charScale;
         }
     }
