@@ -31,22 +31,28 @@ public class Joystick : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            pointA = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
-            //pointA = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            //pointA = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
+            pointA = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
 
-            innerCircle.position = pointA;
-            outerCircle.position = pointA;
+            innerCircle.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
+            outerCircle.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
+
+            innerCircle.GetComponent<SpriteRenderer>().enabled = true;
+            outerCircle.GetComponent<SpriteRenderer>().enabled = true;
 
         }
+
         if (Input.GetMouseButton(0))
         {
             touchStart = true;
-            pointB = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
-            //pointB = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+            //pointB = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
+            pointB = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
         }
         else
         {
             touchStart = false;
+            innerCircle.GetComponent<SpriteRenderer>().enabled = false;
+            outerCircle.GetComponent<SpriteRenderer>().enabled = false;
         }
 
     }
@@ -57,10 +63,10 @@ public class Joystick : MonoBehaviour
         {
             Vector2 offset = pointB - pointA;
             Vector2 direction = Vector2.ClampMagnitude(offset, 1f);
+
             playerControl.MovePlayer(direction, playerControl.maxSpeed);
 
-            innerCircle.position = new Vector2(pointA.x + direction.x, pointA.y + direction.y);
-
+            innerCircle.position = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
 
         }
         
