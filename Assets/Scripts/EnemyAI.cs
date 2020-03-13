@@ -11,7 +11,7 @@ public class EnemyAI : MonoBehaviour
 
     private FieldOfView sensors;
 
-    //the location in which the AI will move to
+    // the location in which the AI will move to
     [HideInInspector]
     public Vector3 pointOfInterest;
 
@@ -24,11 +24,11 @@ public class EnemyAI : MonoBehaviour
 
     private Renderer lineOfSightMeshRenderer;
 
-    //the minimum sound level to detect, lower the for sensitive it is
+    // the minimum sound level to detect, lower the for sensitive it is
     [Range(0.1f, 10f)]
     public float soundDetectionThreshold = 4f;
 
-    //how long the enemy will be looking for the player in seconds
+    // how long the enemy will be looking for the player in seconds
     [Range(1, 60)]
     public int searchDuration = 9;
 
@@ -39,11 +39,11 @@ public class EnemyAI : MonoBehaviour
 
         currentState = EnemyStates.Passive;
 
-        //get navigation component
+        // get navigation component
         nav = GetComponent<NavMeshAgent>();
         nav.isStopped = true;
 
-        //set the max speed to be same as the player
+        // set the max speed to be same as the player
         if (GameObject.FindGameObjectWithTag("Player") != null)
         {
             maxSpeed = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().maxSpeed;
@@ -56,7 +56,7 @@ public class EnemyAI : MonoBehaviour
         sensors = GetComponent<FieldOfView>();
 
         lineOfSightMeshRenderer = transform.Find("LineOfSightMesh").GetComponent<Renderer>();
-        //lineOfSightMeshRenderer.material.shader = Shader.Find("Lightweight Render Pipeline/Simple Lit");
+        // lineOfSightMeshRenderer.material.shader = Shader.Find("Lightweight Render Pipeline/Simple Lit");
 
     }
 
@@ -83,10 +83,10 @@ public class EnemyAI : MonoBehaviour
                 {
                     lineOfSightMeshRenderer.material.SetColor("_BaseColor", Color.red);
                 }
-                //lineOfSightMeshRenderer.material.SetColor("_BaseColor", Color.red);
+                // lineOfSightMeshRenderer.material.SetColor("_BaseColor", Color.red);
                 break;
             default:
-                //lineOfSightMeshRenderer.material.SetColor("_BaseColor", Color.green);
+                // lineOfSightMeshRenderer.material.SetColor("_BaseColor", Color.green);
                 if (lineOfSightMeshRenderer.material.GetColor("_BaseColor") != Color.green)
                 {
                     lineOfSightMeshRenderer.material.SetColor("_BaseColor", Color.green);
@@ -130,7 +130,7 @@ public class EnemyAI : MonoBehaviour
         {
             foreach(var i in sensors.visibleTargets)
             {
-                if (i.tag == "Player")
+                if (i.CompareTag("Player"))
                 {
                     Debug.Log("AI can see player");
                     pointOfInterest = i.position;
@@ -154,7 +154,7 @@ public class EnemyAI : MonoBehaviour
         {
             foreach (var i in sensors.audibleTargets)
             {
-                //check if the object has a sound emitter component
+                // check if the object has a sound emitter component
                 if (i.gameObject.GetComponent<SoundEmitter>() != null && i.gameObject.GetComponent<SoundEmitter>().currentSoundLevel > soundDetectionThreshold)
                 {
                     pointOfInterest = i.position;
@@ -168,7 +168,7 @@ public class EnemyAI : MonoBehaviour
 
     /// <summary>
     /// Move the nav agent to the given point in the game world with the given speed.
-    /// By using the nav mesh, the agent will move untill it is has reached it's destination
+    /// By using the nav mesh, the agent will move until it is has reached it's destination
     /// </summary>
     /// <param name="point"></param>
     /// <param name="speed"></param>
@@ -190,9 +190,9 @@ public class EnemyAI : MonoBehaviour
 //enums used for AI behaviors
 public enum EnemyStates
 {
-    Passive, //default state, will follow normal route
-    Detect, //AI sees something unusual, will move to point of interest
-    Aggressive //AI sees player, will run to catch the player
+    Passive, // default state, will follow normal route
+    Detect, // AI sees something unusual, will move to point of interest
+    Aggressive // AI sees player, will run to catch the player
 }
 
 

@@ -51,15 +51,21 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void MovePlayer(Vector2 controlVector, float moveSpeed)
     {
-        //get camera axis of the transform in world spaces
+        // get camera axis of the transform in world spaces
         Vector3 forwardCam = cameraTransform.forward;
         Vector3 rightCam = cameraTransform.right;
 
-        //normalize the cam value
+        // normalize the cam value
         forwardCam.y = 0;
         rightCam.y = 0;
         forwardCam = forwardCam.normalized;
         rightCam = rightCam.normalized;
+
+        // check if user has pressed any keys (this is made for PC only at the moment)
+        if(controlVector.x + controlVector.y != 0)
+        {
+            soundEmitter.currentSoundLevel = maxSpeed;
+        }
 
         rb.MovePosition(transform.position + ((forwardCam * controlVector.y + rightCam * controlVector.x) * moveSpeed * Time.deltaTime));
     }
