@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Linq;
 
-public class EnemyAI : MonoBehaviour
+public class BaseAi : MonoBehaviour
 {
 
     private NavMeshAgent nav;
@@ -14,7 +14,7 @@ public class EnemyAI : MonoBehaviour
     // the location in which the AI will move to
     [HideInInspector]
     public Vector3 pointOfInterest;
-
+    [HideInInspector]
     public EnemyStates currentState;
 
     [Range(0.1f, 2.5f)]
@@ -186,3 +186,5 @@ public class EnemyAI : MonoBehaviour
     }
 
 }
+
+
