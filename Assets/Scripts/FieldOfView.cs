@@ -4,53 +4,59 @@ using UnityEngine;
 
 public class FieldOfView : MonoBehaviour
 {
+    // the distance of the view cone
     public float viewRadius;
+
+    // angle of the view cone
     [Range(0, 360)]
     public float viewAngle;
 
+    // time in seconds for delaying sensor state
     public float sensorDelay;
 
-    //layer mask to detect
+    // layer mask to detect
     public LayerMask targetMask;
-    //layer mask to act as an obstacle
+    // layer mask to act as an obstacle
     public LayerMask obstacleMask;
 
-    //list of targets that are within the view range
+    // list of targets that are within the view range
     [HideInInspector]
     public List<Transform> visibleTargets = new List<Transform>();
-    //list of targets that are within the view radius
+    // list of targets that are within the view radius
     [HideInInspector]
     public List<Transform> audibleTargets = new List<Transform>();
 
-    //the number of raycasts it will shoot to draw the line of sight
-    //0.2 is a good value, but higher value means more calculations
+    // the number of raycasts it will shoot to draw the line of sight
+    // 0.2 is a good value, but higher value means more calculations
     public float meshResolution;
 
-    //raycast edge detection refresh rate
+    // raycast edge detection refresh rate
+    [HideInInspector]
     public int edgeResolveIterations = 4;
 
-    //distance for objects to be considered seperate
+    // distance for objects to be considered separate
+    [HideInInspector]
     public float edgeDstThreshold = 0.5f;
 
-    //mesh filter for the line of sight
+    // mesh filter for the line of sight. The mesh that will be rendered
     public MeshFilter viewMeshFilter;
     Mesh viewMesh;
 
     private void Start()
     {
-        //set the mesh and mesh filter
+        // set the mesh and mesh filter
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
         viewMeshFilter.mesh = viewMesh;
 
-        //start method FindTargetsWithDelay(sensorDelay);
+        // start method FindTargetsWithDelay(sensorDelay);
         StartCoroutine("FindTargetsWithDelay", sensorDelay);
     }
 
-    //using LateUpdate to reduce jittering vector updates
+    // using LateUpdate to reduce jittering vector updates
     private void LateUpdate()
     {
-        //draws and updates the mesh that represents the object's field of view
+        // draws and updates the mesh that represents the object's field of view
         DrawFieldOfView();
     }
 
@@ -80,30 +86,30 @@ public class FieldOfView : MonoBehaviour
     /// <param name="targetLayer"></param>
     void FindVisibleTargets(LayerMask targetLayer)
     {
-        //clear the list when the method starts
+        // clear the list when the method starts
         visibleTargets.Clear();
         audibleTargets.Clear();
 
-        //get the array of all the objects that are in the target mask and is within the view radius
+        // get the array of all the objects that are in the target mask and is within the view radius
         Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetLayer);
 
         for (int i = 0; i < targetsInViewRadius.Length; i++)
         {
-            //get the transform of the target in the current index
+            // get the transform of the target in the current index
             Transform target = targetsInViewRadius[i].transform;
 
             audibleTargets.Add(target);
 
-            //get the direction from this object to the target object
+            // get the direction from this object to the target object
             Vector3 dirToTarget = (target.position - transform.position).normalized;
 
-            //check if the direction of the target is with in the view angle. aka; is it visible to this object?
+            // check if the direction of the target is with in the view angle. aka; is it visible to this object?
             if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
             {
-                //get the distance from this object to target object
+                // get the distance from this object to target object
                 float dstToTarget = Vector3.Distance(transform.position, target.position);
 
-                //check if there is no obstacle layer mask, and than add the target's transform data
+                // check if there is no obstacle layer mask, and than add the target's transform data
                 if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
                 {
                     visibleTargets.Add(target);
@@ -120,12 +126,12 @@ public class FieldOfView : MonoBehaviour
     /// </summary>
     void DrawFieldOfView()
     {
-        //calculate the triangle count
+        // calculate the triangle count
         int stepCount = Mathf.RoundToInt(viewAngle * meshResolution);
         //determine the triangle size
         float stepAngleSize = viewAngle / stepCount;
 
-        //list of view points the raycast will hit
+        // list of view points the raycast will hit
         List<Vector3> viewPoints = new List<Vector3>();
 
         ViewCastInfo oldViewCast = new ViewCastInfo();
@@ -156,12 +162,12 @@ public class FieldOfView : MonoBehaviour
             oldViewCast = newViewCast;
         }
 
-        //the number of points plus the origin
+        // the number of points plus the origin
         int vertexCount = viewPoints.Count + 1;
         Vector3[] vertices = new Vector3[vertexCount];
         int[] triangles = new int[(vertexCount - 2) * 3];
 
-        //set the vertex origin
+        // set the vertex origin
         vertices[0] = Vector3.zero;
         for (int i = 0; i < vertexCount - 1; i++)
         {
@@ -169,7 +175,7 @@ public class FieldOfView : MonoBehaviour
 
             if (i < vertexCount - 2)
             {
-                //set the points for the triangle
+                // set the points for the triangle
                 triangles[i * 3] = 0;
                 triangles[i * 3 + 1] = i + 1;
                 triangles[i * 3 + 2] = i + 2;

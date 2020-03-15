@@ -7772,7 +7772,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &503610881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26308,7 +26308,6 @@ GameObject:
   - component: {fileID: 2102059309}
   - component: {fileID: 2102059308}
   - component: {fileID: 2102059307}
-  - component: {fileID: 2102059306}
   - component: {fileID: 2102059305}
   - component: {fileID: 2102059304}
   m_Layer: 10
@@ -26327,11 +26326,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 2102059303}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54afa2bcef19cdc43af95b9e420a297b, type: 3}
+  m_Script: {fileID: 11500000, guid: 1e22e043ee2124512a0f6d264ada4279, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentSoundLevel: 0
-  sourceAudio: {fileID: 0}
+  hasVisualSensor: 1
+  hasAudioSensor: 1
+  pointOfInterest: {x: 0, y: 0, z: 0}
+  currentState: 0
+  passiveSpeed: 1
+  soundDetectionThreshold: 4
+  searchDuration: 9
 --- !u!114 &2102059305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26359,23 +26363,6 @@ MonoBehaviour:
   edgeResolveIterations: 4
   edgeDstThreshold: 0.5
   viewMeshFilter: {fileID: 320801877}
---- !u!114 &2102059306
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2102059303}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3445b39df3087f145a3dedb3389a35e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pointOfInterest: {x: 0, y: 0, z: 0}
-  currentState: 0
-  passiveSpeed: 1
-  soundDetectionThreshold: 4
-  searchDuration: 9
 --- !u!195 &2102059307
 NavMeshAgent:
   m_ObjectHideFlags: 0

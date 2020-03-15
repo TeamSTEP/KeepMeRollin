@@ -23,12 +23,15 @@ Unity Collaboration:
 - Does not distinguish between Alpha or Beta versions
 - Publishing changes to the project should match the commits to Github
 
-Overall for developers, I recommend using Github for starting your development and committing your progress.
-For collaborating with other developers, you can use a VS Code extension called [Live Share](https://marketplace.visualstudio.com/items?itemName=MS-vsliveshare.vsliveshare).
+Overall for developers, I recommend using Github for managing your development and committing your progress.
+For collaborating with other developers, you can use a VS Code extension called [Live Share](https://marketplace.visualstudio.com/items?itemName=MS-vsliveshare.vsliveshare) or something similar in Visual Studio.
 
 # Github Guide
 
 Because Github provides the developer with massive features, we will write a separate section that defines how to use each features that is required.
+
+## The Basic Model
+
 
 ## Branches and Forks
 
@@ -40,7 +43,7 @@ For KMR, branches will be the WIP versions and nested branches are the developin
 Let's say there's a branch named `v-0.1.3a/ai_hearing_sensor`\*
 In here, `v-0.1.3a` is the version for the build and `ai_hearing_sensor` is the current in-development feature.
 
-\*Note: the actual name of the branch does not have `/` as Github does not allow this. So please make sure that the feature branch is derived from the version branch.
+\*Note: the actual name of the branch does not have `/`, instead, make sure that the feature branch is derived from the version branch.
 
 Once the implementation of the feature is done and you tested for errors, you should open a Pull Request that merges the feature branch to the parent version branch.
 using the above example, when you finishing implementing the hearing sensor for the AI, you should open a PR that merges `v-0.1.3a/ai_hearing_sensor` to `v-0.1.3a` and delete the branch `v-0.1.3a/ai_hearing_sensor` when deemed appropriate.
