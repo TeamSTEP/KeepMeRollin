@@ -4,23 +4,21 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Linq;
 
-public class EnemyAI : MonoBehaviour
+[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(FieldOfView))]
+public class BaseAi : MonoBehaviour
 {
-
-    private NavMeshAgent nav;
-
     private FieldOfView sensors;
+
+    public bool hasVisualSensor = true;
+
+    public bool hasAudioSensor = true;
 
     // the location in which the AI will move to
     [HideInInspector]
     public Vector3 pointOfInterest;
-
+    [HideInInspector]
     public EnemyStates currentState;
-
-    [Range(0.1f, 2.5f)]
-    public float passiveSpeed = 1.0f;
-
-    private float maxSpeed;
 
     private Renderer lineOfSightMeshRenderer;
 
@@ -30,7 +28,9 @@ public class EnemyAI : MonoBehaviour
 
     // how long the enemy will be looking for the player in seconds
     [Range(1, 60)]
-    public int searchDuration = 9;
+    public float searchDuration = 9f;
+    // initialize search duration cool-down
+    private float searchCoolDown = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -38,20 +38,6 @@ public class EnemyAI : MonoBehaviour
         pointOfInterest = transform.position;
 
         currentState = EnemyStates.Passive;
-
-        // get navigation component
-        nav = GetComponent<NavMeshAgent>();
-        nav.isStopped = true;
-
-        // set the max speed to be same as the player
-        if (GameObject.FindGameObjectWithTag("Player") != null)
-        {
-            maxSpeed = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>().maxSpeed;
-        }
-        else
-        {
-            maxSpeed = 5f;
-        }
 
         sensors = GetComponent<FieldOfView>();
 
@@ -64,8 +50,39 @@ public class EnemyAI : MonoBehaviour
     void FixedUpdate()
     {
         ChangeLineOfSightColor();
-
         MainBehaviorControl();
+    }
+
+    /// <summary>
+    /// The main behavior of the AI. This method will handle what the AI will do for each state
+    /// </summary>
+    void MainBehaviorControl()
+    {
+
+        if (CanSeeObject() && hasVisualSensor)
+        {
+            searchCoolDown = Time.time + searchDuration;
+            Debug.Log("AI can see");
+            currentState = EnemyStates.Aggressive;
+        }
+        else if (CanHearObject() && hasAudioSensor)
+        {
+            searchCoolDown = Time.time + searchDuration;
+            Debug.Log("AI can hear");
+            // only change the state when the AI is not aggressive
+            if(currentState != EnemyStates.Aggressive)
+            {
+                currentState = EnemyStates.Detect;
+            }
+        }
+        // set state to passive if there is no feedback from object for a certain amount of time
+        if(searchCoolDown <= Time.time)
+        {
+            Debug.Log("AI lost object");
+            currentState = EnemyStates.Passive;
+        }
+
+        Debug.DrawLine(transform.position, pointOfInterest, Color.blue);
     }
 
     void ChangeLineOfSightColor()
@@ -96,40 +113,16 @@ public class EnemyAI : MonoBehaviour
     }
 
     /// <summary>
-    /// The main behavior of the AI. This method will handle what the AI will do for each state
+    /// Returns true when the AI can see an object. This also sets the condition for when the AI can see a certain object
     /// </summary>
-    void MainBehaviorControl()
-    {
-
-        if (CanSeeObject())
-        {
-            Debug.Log("AI can see");
-            currentState = EnemyStates.Aggressive;
-            MoveTowardsPoint(pointOfInterest, maxSpeed);
-        }
-        else if (CanHearObject())
-        {
-            Debug.Log("AI can hear");
-            currentState = EnemyStates.Detect;
-            MoveTowardsPoint(pointOfInterest, passiveSpeed);
-        }
-
-        if (nav.remainingDistance <= nav.stoppingDistance)
-        {
-            Debug.Log("object has stopped");
-            nav.isStopped = true;
-            currentState = EnemyStates.Passive;
-        }
-
-        Debug.DrawLine(transform.position, pointOfInterest, Color.blue);
-    }
-
+    /// <returns></returns>
     bool CanSeeObject()
     {
         if (sensors.visibleTargets.Count > 0)
         {
             foreach (var i in sensors.visibleTargets)
             {
+                // only check objects with the tag Player
                 if (i.CompareTag("Player"))
                 {
                     Debug.Log("AI can see player");
@@ -148,6 +141,10 @@ public class EnemyAI : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// Returns true when the AI can hear an object. This also defines what is audible
+    /// </summary>
+    /// <returns></returns>
     bool CanHearObject()
     {
         if (sensors.audibleTargets.Count != 0)
@@ -166,23 +163,6 @@ public class EnemyAI : MonoBehaviour
         return false;
     }
 
-    /// <summary>
-    /// Move the nav agent to the given point in the game world with the given speed.
-    /// By using the nav mesh, the agent will move until it is has reached it's destination
-    /// </summary>
-    /// <param name="point"></param>
-    /// <param name="speed"></param>
-    void MoveTowardsPoint(Vector3 point, float speed)
-    {
-        if (nav.isStopped)
-        {
-            nav.isStopped = false;
-        }
-        if (nav.speed != speed)
-            nav.speed = speed;
-
-        nav.SetDestination(point);
-
-    }
-
 }
+
+
