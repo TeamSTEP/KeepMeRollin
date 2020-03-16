@@ -59,16 +59,14 @@ public class BaseAi : MonoBehaviour
     void MainBehaviorControl()
     {
 
-        if (CanSeeObject() && hasVisualSensor)
+        if (hasVisualSensor && CanSeeObject())
         {
             searchCoolDown = Time.time + searchDuration;
-            Debug.Log("AI can see");
             currentState = EnemyStates.Aggressive;
         }
-        else if (CanHearObject() && hasAudioSensor)
+        else if (hasAudioSensor && CanHearObject())
         {
             searchCoolDown = Time.time + searchDuration;
-            Debug.Log("AI can hear");
             // only change the state when the AI is not aggressive
             if(currentState != EnemyStates.Aggressive)
             {
@@ -78,11 +76,17 @@ public class BaseAi : MonoBehaviour
         // set state to passive if there is no feedback from object for a certain amount of time
         if(searchCoolDown <= Time.time)
         {
-            Debug.Log("AI lost object");
             currentState = EnemyStates.Passive;
         }
 
+        // draw point of interest of AI
         Debug.DrawLine(transform.position, pointOfInterest, Color.blue);
+
+        // draw a line between the sensor object and the targets
+        foreach (Transform visibleTarget in sensors.visibleTargets)
+        {
+            Debug.DrawLine(sensors.transform.position, visibleTarget.position, Color.red);
+        }
     }
 
     void ChangeLineOfSightColor()
@@ -100,10 +104,8 @@ public class BaseAi : MonoBehaviour
                 {
                     lineOfSightMeshRenderer.material.SetColor("_BaseColor", Color.red);
                 }
-                // lineOfSightMeshRenderer.material.SetColor("_BaseColor", Color.red);
                 break;
             default:
-                // lineOfSightMeshRenderer.material.SetColor("_BaseColor", Color.green);
                 if (lineOfSightMeshRenderer.material.GetColor("_BaseColor") != Color.green)
                 {
                     lineOfSightMeshRenderer.material.SetColor("_BaseColor", Color.green);

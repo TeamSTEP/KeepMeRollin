@@ -54,11 +54,18 @@ public class TriadAi : MonoBehaviour
                 Debug.Log("I am searching");
                 MoveTowardsPoint(baseAi.pointOfInterest, passiveSpeed);
                 break;
-            default:
+            case EnemyStates.Passive:
                 Debug.Log("I am passive");
                 //todo: add walk path
                 nav.isStopped = true;
                 break;
+        }
+
+        // if the AI is close to the player
+        if (nav.remainingDistance <= nav.stoppingDistance)
+        {
+            baseAi.currentState = EnemyStates.Passive;
+            //Debug.Log("Arrived at destination");
         }
 
     }

@@ -49,7 +49,7 @@ public class FieldOfView : MonoBehaviour
         viewMesh.name = "View Mesh";
         viewMeshFilter.mesh = viewMesh;
 
-        // start method FindTargetsWithDelay(sensorDelay);
+        // start method FindTargetsWithDelay(sensorDelay); We use this because of the yield keyword
         StartCoroutine("FindTargetsWithDelay", sensorDelay);
     }
 
