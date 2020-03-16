@@ -56,7 +56,7 @@ public class TriadAi : MonoBehaviour
                 break;
             default:
                 Debug.Log("I am passive");
-                // add walk path
+                //todo: add walk path
                 nav.isStopped = true;
                 break;
         }
