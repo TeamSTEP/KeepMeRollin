@@ -68,10 +68,10 @@ public class FieldOfView : MonoBehaviour
     /// <returns></returns>
     IEnumerator FindTargetsWithDelay(float delay)
     {
-        //used to loop the method
+        // used to loop the method
         while (true)
         {
-            //yield is used to stop the Coroutine for the given amount of seconds in float
+            // yield is used to stop the Coroutine for the given amount of seconds in float
             yield return new WaitForSeconds(delay);
 
             FindVisibleTargets(targetMask);
@@ -93,16 +93,17 @@ public class FieldOfView : MonoBehaviour
         // get the array of all the objects that are in the target mask and is within the view radius
         Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetLayer);
 
-        for (int i = 0; i < targetsInViewRadius.Length; i++)
+        foreach(var i in targetsInViewRadius)
         {
             // get the transform of the target in the current index
-            Transform target = targetsInViewRadius[i].transform;
+            Transform target = i.transform;
 
             audibleTargets.Add(target);
 
             // get the direction from this object to the target object
             Vector3 dirToTarget = (target.position - transform.position).normalized;
 
+            //todo: this part is showing a bug where the target is registered beyond the view radius
             // check if the direction of the target is with in the view angle. aka; is it visible to this object?
             if (Vector3.Angle(transform.forward, dirToTarget) < viewAngle / 2)
             {
@@ -113,7 +114,7 @@ public class FieldOfView : MonoBehaviour
                 if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
                 {
                     visibleTargets.Add(target);
-                    audibleTargets.Remove(target);
+                    //audibleTargets.Remove(target);
                 }
             }
         }

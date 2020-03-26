@@ -14,6 +14,9 @@ public class BaseAi : MonoBehaviour
 
     public bool hasAudioSensor = true;
 
+    [HideInInspector]
+    public Vector3 defaultLocation;
+
     // the location in which the AI will move to
     [HideInInspector]
     public Vector3 pointOfInterest;
@@ -36,6 +39,7 @@ public class BaseAi : MonoBehaviour
     void Start()
     {
         pointOfInterest = transform.position;
+        defaultLocation = transform.position;
 
         currentState = EnemyStates.Passive;
 
@@ -50,13 +54,13 @@ public class BaseAi : MonoBehaviour
     void FixedUpdate()
     {
         ChangeLineOfSightColor();
-        MainBehaviorControl();
+        StateControl();
     }
 
     /// <summary>
-    /// The main behavior of the AI. This method will handle what the AI will do for each state
+    /// Handles the condition for how the AI will transition its state
     /// </summary>
-    void MainBehaviorControl()
+    void StateControl()
     {
 
         if (hasVisualSensor && CanSeeObject())
