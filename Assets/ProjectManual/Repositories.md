@@ -2,6 +2,7 @@
 
 Unity's Collaboration function is mainly used for easily adding assets and syncing or collaborating with team members.
 However, Project KMR will use Github as the main repository where project development progress is tracked and shared.
+Unity Colaborate will be 
 In short,
 
 Github:
@@ -26,9 +27,7 @@ Unity Collaboration:
 Overall for developers, I recommend using Github for managing your development and committing your progress.
 For collaborating with other developers, you can use a VS Code extension called [Live Share](https://marketplace.visualstudio.com/items?itemName=MS-vsliveshare.vsliveshare) or something similar in Visual Studio.
 
-# Github Guide
-
-Because Github provides the developer with massive features, we will write a separate section that defines how to use each features that is required.
+# Git Guide
 
 ## Branches and Forks
 
@@ -47,3 +46,21 @@ In short, branches with the name `development` must be derived from the `master`
 Forks works similar to the `fix` and `feature` branch.
 You can freely fork a `development` branch and merge back to it. But you should never fork and commit to a `fix`/`feature` branch unless you made a new one!
 
+## Versioning Scheme
+By default, this project will use the **Semantic Versioning** as the base for the versioning scheme.
+
+Versions are generally used in three different places.
+- Github tag/dev branch names
+- Unity game version
+- In-game graphical version display
+
+Unity game version and the In-game graphical version display will be linked together, allowing the developer to only focus on working with the in-engine version numbering.
+Those will have to be changed manually.
+Github version names will be taking the form of development branch names like `development/v0.1.3a`.
+The naming scheme for branch names will be like the following,
+- `development/v[major].[minor].[patch][alpha/beta]`.
+
+The major number is when
+
+## How Versions Increment
+Version number 

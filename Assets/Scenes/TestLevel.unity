@@ -26005,7 +26005,7 @@ GameObject:
   - component: {fileID: 2102059304}
   - component: {fileID: 2102059310}
   m_Layer: 10
-  m_Name: Enemy (1)
+  m_Name: Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26025,10 +26025,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hasVisualSensor: 1
   hasAudioSensor: 1
+  defaultLocation: {x: 0, y: 0, z: 0}
   pointOfInterest: {x: 0, y: 0, z: 0}
   currentState: 0
   soundDetectionThreshold: 4
-  searchDuration: 9
+  searchDuration: 8
 --- !u!114 &2102059305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26041,7 +26042,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 921d17ef4bd2a5c46b916a9ec0bbfc32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewRadius: 7
+  viewRadius: 3.19
   viewAngle: 120
   sensorDelay: 0.7
   targetMask:
@@ -26086,7 +26087,7 @@ NavMeshAgent:
   m_AngularSpeed: 120
   m_StoppingDistance: 0.4
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 0
+  m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 0.5
   m_BaseOffset: 0
@@ -26118,7 +26119,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2102059303}
   m_LocalRotation: {x: -0, y: -0.32454285, z: -0, w: 0.945871}
-  m_LocalPosition: {x: -7.44, y: 0.1, z: -9.07}
+  m_LocalPosition: {x: -5.97, y: 0.1, z: -8.04}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 298878642}
@@ -26138,7 +26139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 380ba443cc14ded45ac8ae935f0d2556, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  passiveSpeed: 1.25
+  passiveSpeed: 1
 --- !u!1001 &2112322818
 PrefabInstance:
   m_ObjectHideFlags: 0
