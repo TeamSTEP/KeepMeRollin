@@ -26023,8 +26023,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e22e043ee2124512a0f6d264ada4279, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hasVisualSensor: 0
+  hasVisualSensor: 1
   hasAudioSensor: 1
+  defaultLocation: {x: 0, y: 0, z: 0}
   pointOfInterest: {x: 0, y: 0, z: 0}
   currentState: 0
   soundDetectionThreshold: 4
