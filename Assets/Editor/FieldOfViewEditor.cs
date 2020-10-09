@@ -22,6 +22,7 @@ public class FieldOfViewEditor : Editor
         Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngleA * fow.viewRadius);
         Handles.DrawLine(fow.transform.position, fow.transform.position + viewAngleB * fow.viewRadius);
 
+        /*
         // change line color to red
         Handles.color = Color.red;
         // draw a line between the fow object and the targets
@@ -29,5 +30,6 @@ public class FieldOfViewEditor : Editor
         {
             Handles.DrawLine(fow.transform.position, visibleTarget.position);
         }
+        */
     }
 }

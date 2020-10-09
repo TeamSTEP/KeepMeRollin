@@ -2,6 +2,7 @@
 
 Unity's Collaboration function is mainly used for easily adding assets and syncing or collaborating with team members.
 However, Project KMR will use Github as the main repository where project development progress is tracked and shared.
+Unity Colaborate will be 
 In short,
 
 Github:
@@ -26,68 +27,40 @@ Unity Collaboration:
 Overall for developers, I recommend using Github for managing your development and committing your progress.
 For collaborating with other developers, you can use a VS Code extension called [Live Share](https://marketplace.visualstudio.com/items?itemName=MS-vsliveshare.vsliveshare) or something similar in Visual Studio.
 
-# Github Guide
-
-Because Github provides the developer with massive features, we will write a separate section that defines how to use each features that is required.
-
-## The Basic Model
-
+# Git Guide
 
 ## Branches and Forks
 
-When implementing a new feature for most projects, you would create a branch that is only for that feature.
+the basic idea of branches and PRs is, when implementing a new feature for most projects, you would create a branch that is only for that feature.
 When the development is done you would open a pull request and merge it with the master.
-However, we will doing things a bit differently as game development involves many moving parts that rely on each other.
-For KMR, branches will be the WIP versions and nested branches are the developing feature or mechanism for that version.
+We will elaborate on this idea and create a single standard as game development involves many moving parts that rely on each other and it is important for everyone to be on the same page with this.
 
-Let's say there's a branch named `v-0.1.3a/ai_hearing_sensor`\*
-In here, `v-0.1.3a` is the version for the build and `ai_hearing_sensor` is the current in-development feature.
+There will be mainly three types of branches for KMR.
 
-\*Note: the actual name of the branch does not have `/`, instead, make sure that the feature branch is derived from the version branch.
+- `fix` branch: a branch name that is used for commits for patches or fixes that address a bug that came from the `feature` branch. This does not add anything new in terms of features, but only refactors them. Ex) `fix/throw-object`.
+- `feature` branch: branches that adds something new to the game which may break the game or not. Because of how game development works, commits in this branch will inadvertently act similar as the `fix` branch (and it is fine to do that as long as you record it!), but one key difference is that `feature` branch must add something new. Ex) `feature/ai-sensors`.
+- `development` branch: these are the branches that are in active development. They have a very strict rule. First, the name must be the semantic version name. Second, every `feature` and `fix` branches must be derived from this branch and merge back to it when finished (no branch should derive from other branches). Lastly, after merging the `development` branch with the `master` branch, the `development` branch should not be touched at all. Ex) `development/v-0.0.1b`
 
-Once the implementation of the feature is done and you tested for errors, you should open a Pull Request that merges the feature branch to the parent version branch.
-using the above example, when you finishing implementing the hearing sensor for the AI, you should open a PR that merges `v-0.1.3a/ai_hearing_sensor` to `v-0.1.3a` and delete the branch `v-0.1.3a/ai_hearing_sensor` when deemed appropriate.
-However, even if a version is completed, you should not delete a version branch even after a merge.
-But a nested child branch should always be removed after a PR.
+In short, branches with the name `development` must be derived from the `master` while the `fix` and `feature` branches derive from the latest `development` branch. Only `development` branches are allowed to merge with `master`. However, you can only merge when there are no `fix` or `feature` branches, and once you merge you can only create a new `development` branch, no direct commits to `master` **unless the situation calls for it**.
 
-Another method of collaborative work is, instead of making branches, you can **Fork** the repo.
-implement the feature that you want to develop, commit to the **version branch** (`v-0.1.3a` in the above example).
-Once the development is finished, merge the fork to the original repo and merge it to the version branch and not the master.
+Forks works similar to the `fix` and `feature` branch.
+You can freely fork a `development` branch and merge back to it. But you should never fork and commit to a `fix`/`feature` branch unless you made a new one!
 
-**Never commit directly to the master!**
-However, you are allowed to commit directly to any branches or the master when there is a very minor error that you know how to fix without requiring any tests afterwards.
+## Versioning Scheme
+By default, this project will use the **Semantic Versioning** as the base for the versioning scheme.
 
-## Master
+Versions are generally used in three different places.
+- Github tag/dev branch names
+- Unity game version
+- In-game graphical version display
 
-The master branch of a project repo should always be the latest finished build.
-There should be no obvious bugs in the master branch as the master is assumed to be a Good-to-Show build if not the release build.
+Unity game version and the In-game graphical version display will be linked together, allowing the developer to only focus on working with the in-engine version numbering.
+Those will have to be changed manually.
+Github version names will be taking the form of development branch names like `development/v0.1.3a`.
+The naming scheme for branch names will be like the following,
+- `development/v[major].[minor].[patch][alpha/beta]`.
 
-## Pull Request Format
+The major number is when
 
-In general, there are two types of pull requests,
-
-- Feature Branch to Version Branch (or forked version branch to original version branch)
-- Version Branch to Master Branch
-
-The first, feature branch to version branch PR will be the most common PR during active development.
-The description for this PR is not that important (but having a comprehensive description of what was added is always helpful).
-Instead the title of the PR is very important as that is the main indicator of what was added.
-And putting importance in the title of the branch and the PR allows the developers to implement one feature at a time rather than doing multiple work at the same time.
-For example, if the name of the branch is `v-0.1.4a/throw_objects`, the title of the PR for this should be "Implemented throwable objects and throwing mechanics".
-This may be confusing (if so you are free to propose a better solution) but to put it simply, the title should say the major additions for the feature, _something that can be written in the game update log_.
-
-The second type, version branch to master branch PR is the opposite of the feature branch to merge branch, as the title should only say what version the master is going to be updated to.
-Instead the description should contain the full change log (version branch commits) for each features added.
-It should also summarize what the update is doing.
-This is important because the _description of the PR will be part of the `README.md` file for the master branch_.
-
-## Typical Workflow
-
-A typical workflow starting from adding a feature to updating the game's version will be something like the following.
-
-1. Create a version branch (`v-0.2.0a`)
-2. Create a feature branch (`v-0.2.0a/spell_base`)
-3. Develop the feature and test that it works, commit work when done
-4. Open a PR and merge feature branch to the version branch (`v-0.2.0a/spell_base -> v-0.2.0a`)
-5. Create another feature branch when needed, repeat step 3
-6. Open a PR and merge version branch to master (`v-0.2.0a -> master`)
+## How Versions Increment
+Version number 
